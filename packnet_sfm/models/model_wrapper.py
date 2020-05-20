@@ -8,7 +8,7 @@ import numpy as np
 import torch
 from torch.utils.data import ConcatDataset, DataLoader
 
-from packnet_sfm.datasets import KITTIDataset, DGPDataset, ImageDataset
+from packnet_sfm.datasets import KITTIDataset, ImageDataset  # DGPDataset,
 from packnet_sfm.datasets.transforms import get_transforms
 from packnet_sfm.utils.depth import inv2depth, post_process_inv_depth, compute_depth_metrics
 from packnet_sfm.utils.horovod import print0, world_size, rank, on_rank_0
@@ -382,9 +382,9 @@ def setup_depth_net(config, prepared, **kwargs):
     """
     print0(pcolor('DepthNet: %s' % config.name, 'yellow'))
     depth_net = load_class_args_create(config.name,
-        paths=['packnet_sfm.networks.depth',],
-        args={**config, **kwargs},
-    )
+                                       paths=['packnet_sfm.networks.depth', ],
+                                       args={**config, **kwargs},
+                                       )
     if not prepared and config.checkpoint_path is not '':
         depth_net = load_network(depth_net, config.checkpoint_path,
                                  ['depth_net', 'disp_network'])
@@ -411,9 +411,9 @@ def setup_pose_net(config, prepared, **kwargs):
     """
     print0(pcolor('PoseNet: %s' % config.name, 'yellow'))
     pose_net = load_class_args_create(config.name,
-        paths=['packnet_sfm.networks.pose',],
-        args={**config, **kwargs},
-    )
+                                      paths=['packnet_sfm.networks.pose', ],
+                                      args={**config, **kwargs},
+                                      )
     if not prepared and config.checkpoint_path is not '':
         pose_net = load_network(pose_net, config.checkpoint_path,
                                 ['pose_net', 'pose_network'])
@@ -439,7 +439,7 @@ def setup_model(config, prepared, **kwargs):
         Created model
     """
     print0(pcolor('Model: %s' % config.name, 'yellow'))
-    model = load_class(config.name, paths=['packnet_sfm.models',])(
+    model = load_class(config.name, paths=['packnet_sfm.models', ])(
         **{**config.loss, **kwargs})
     # Add depth network if required
     if model.requires_depth_net:
@@ -505,12 +505,12 @@ def setup_dataset(config, mode, requires_gt_depth=True, **kwargs):
                 mode='mono',
             )
         # DGP dataset
-        elif config.dataset[i] == 'DGP':
-            dataset = DGPDataset(
-                config.path[i], config.split[i],
-                **dataset_args, **dataset_args_i,
-                cameras=config.cameras,
-            )
+        # elif config.dataset[i] == 'DGP':
+        #     dataset = DGPDataset(
+        #         config.path[i], config.split[i],
+        #         **dataset_args, **dataset_args_i,
+        #         cameras=config.cameras,
+        #     )
         # Image dataset
         elif config.dataset[i] == 'Image':
             dataset = ImageDataset(
@@ -548,7 +548,7 @@ def worker_init_fn(worker_id):
 def get_datasampler(dataset, mode):
     """Distributed data sampler"""
     return torch.utils.data.distributed.DistributedSampler(
-        dataset, shuffle=(mode=='train'),
+        dataset, shuffle=(mode == 'train'),
         num_replicas=world_size(), rank=rank())
 
 

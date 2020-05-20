@@ -11,7 +11,7 @@ These datasets output images, camera calibration, depth maps and poses for depth
 """
 
 from packnet_sfm.datasets.kitti_dataset import KITTIDataset
-from packnet_sfm.datasets.dgp_dataset import DGPDataset
+# from packnet_sfm.datasets.dgp_dataset import DGPDataset
 from packnet_sfm.datasets.image_dataset import ImageDataset
 
 __all__ = [
