@@ -6,6 +6,7 @@
 import torch
 import torch.nn as nn
 
+
 ########################################################################################################################
 
 def conv_gn(in_planes, out_planes, kernel_size=3):
@@ -30,8 +31,9 @@ def conv_gn(in_planes, out_planes, kernel_size=3):
         nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size,
                   padding=(kernel_size - 1) // 2, stride=2),
         nn.GroupNorm(16, out_planes),
-        nn.ReLU(inplace=True)
+        nn.GELU()
     )
+
 
 ########################################################################################################################
 
